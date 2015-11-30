@@ -15,6 +15,8 @@
 		F497C2911BFFA6650076C49B /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F497C2901BFFA6650076C49B /* Photos.framework */; };
 		F497C2931BFFB5A20076C49B /* PhotoTumbnailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F497C2921BFFB5A20076C49B /* PhotoTumbnailCollectionViewCell.swift */; };
 		F4E9876F1C079030001624B3 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E9876E1C079030001624B3 /* PhotoViewController.swift */; };
+		F4E987731C08C084001624B3 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4E987711C08C084001624B3 /* Fabric.framework */; };
+		F4E987741C08C084001624B3 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4E987721C08C084001624B3 /* Crashlytics.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		F497C2901BFFA6650076C49B /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		F497C2921BFFB5A20076C49B /* PhotoTumbnailCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoTumbnailCollectionViewCell.swift; sourceTree = "<group>"; };
 		F4E9876E1C079030001624B3 /* PhotoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
+		F4E987711C08C084001624B3 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		F4E987721C08C084001624B3 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +40,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F497C2911BFFA6650076C49B /* Photos.framework in Frameworks */,
+				F4E987741C08C084001624B3 /* Crashlytics.framework in Frameworks */,
+				F4E987731C08C084001624B3 /* Fabric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,6 +68,8 @@
 		F497C27D1BFF86280076C49B /* PhotoGallery */ = {
 			isa = PBXGroup;
 			children = (
+				F4E987711C08C084001624B3 /* Fabric.framework */,
+				F4E987721C08C084001624B3 /* Crashlytics.framework */,
 				F497C27E1BFF86280076C49B /* AppDelegate.swift */,
 				F497C2801BFF86280076C49B /* ViewController.swift */,
 				F497C2821BFF86280076C49B /* Main.storyboard */,
@@ -84,6 +92,7 @@
 				F497C2771BFF86280076C49B /* Sources */,
 				F497C2781BFF86280076C49B /* Frameworks */,
 				F497C2791BFF86280076C49B /* Resources */,
+				F4E987701C08C043001624B3 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -140,6 +149,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		F4E987701C08C043001624B3 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run 7f1507130f0184c56e78cdce76b52754d3c3994c b08eb32860529a90549d3ec40138239f21b9b2be0106d6fefa214b11dde03bf2";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		F497C2771BFF86280076C49B /* Sources */ = {
@@ -260,6 +285,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/PhotoGallery",
+				);
 				INFOPLIST_FILE = PhotoGallery/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -272,6 +302,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/PhotoGallery",
+				);
 				INFOPLIST_FILE = PhotoGallery/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

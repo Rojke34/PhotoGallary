@@ -52,6 +52,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         self.presentViewController(picker, animated: true, completion: nil)
     }
     
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -63,7 +68,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         if collection.firstObject != nil {
             
             albumFound = true
-            assetCollection = collection.firstObject as! PHAssetCollection
+            self.assetCollection = collection.firstObject as! PHAssetCollection
             
         } else {
             
@@ -91,13 +96,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.hidesBarsOnTap = false
-        self.photoAsset = PHAsset.fetchAssetsInAssetCollection(self.assetCollection, options: nil)
+        if albumFound != false {
+            self.photoAsset = PHAsset.fetchAssetsInAssetCollection(self.assetCollection, options: nil)
+        }
         self.collectionView.reloadData()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -124,16 +126,23 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell: PhotoTumbnailCollectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoTumbnailCollectionViewCell
         
-        let asset: PHAsset = self.photoAsset[indexPath.item] as! PHAsset
         
-        PHImageManager.defaultManager().requestImageForAsset(asset, targetSize: PHImageManagerMaximumSize, contentMode: .AspectFill, options: nil) { (result, info) -> Void in
-            cell.setThumbnailImage(result!)
+         let asset: PHAsset = self.photoAsset[indexPath.item] as! PHAsset
+        
+        print(asset)
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) { () -> Void in
+            dispatch_sync(dispatch_get_main_queue(), { () -> Void in
+                
+                PHImageManager.defaultManager().requestImageForAsset(asset, targetSize: PHImageManagerMaximumSize, contentMode: .AspectFill, options: nil) { (result, info) -> Void in
+                    cell.setThumbnailImage(result!)
+                }
+                
+                })
         }
         
         return cell
     }
-
-
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
         return 4
@@ -143,15 +152,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         return 1
     }
     
-    
     //UIImagepIkecrController Delgate Methos
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         let image = info["UIImagePickerControllerOriginalImage"] as! UIImage
         
-        
         PHPhotoLibrary.sharedPhotoLibrary().performChanges({ () -> Void in
             
-            let createAssetRequest = PHAssetChangeRequest.creationRequestForAssetFromImage(image)
+            let createAssetRequest = PHAssetChangeRequest.creationRequestForAssetFromImage(self.scaleImage(image, maxDimension: 640))
             let assetPlaceholder = createAssetRequest.placeholderForCreatedAsset
             let albumChangeRequest = PHAssetCollectionChangeRequest(forAssetCollection: self.assetCollection, assets: self.photoAsset)
             albumChangeRequest?.addAssets([assetPlaceholder!] as NSArray)
@@ -170,6 +177,28 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     
+    //Scale Image to reduce the size
+    func scaleImage(image: UIImage, maxDimension: CGFloat) -> UIImage {
+        var scaledSize = CGSize(width: maxDimension, height: maxDimension)
+        var scaleFactor: CGFloat
+        
+        if image.size.width > image.size.height {
+            scaleFactor = image.size.height / image.size.width
+            scaledSize.width = maxDimension
+            scaledSize.height = scaledSize.width * scaleFactor
+        } else {
+            scaleFactor = image.size.width / image.size.height
+            scaledSize.height = maxDimension
+            scaledSize.width = scaledSize.height * scaleFactor
+        }
+        
+        UIGraphicsBeginImageContext(scaledSize)
+        image.drawInRect(CGRectMake(0, 0, scaledSize.width, scaledSize.height))
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return scaledImage
+    }
     
     
 }
